@@ -1,0 +1,38 @@
+
+{% block content %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Second Page</title>
+</head>
+<body>
+    <html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Flask Apps</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="#" style="color: rgb(78, 144, 202);">
+            <img src="../static/download.jpg" alt="" width="30" height="24">
+        Store App for Customers Segregation 
+        </a>
+        <a class="btn btn-primary" href="/">Face Identification Page</a>
+        </div>
+      </nav>
+    <h1>Second Page</h1>
+    <img src="{{ url_for('static', filename='download.jpg') }}" alt="Image">
+</body>
+</html>
+{% endblock %}
