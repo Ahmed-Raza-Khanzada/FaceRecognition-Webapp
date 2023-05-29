@@ -1,21 +1,16 @@
 import cv2
 from process import process_image
 import time
-import mediapipe as mp
-import os,face_recognition
-mp_face_detection = mp.solutions.face_detection.FaceDetection()
+
  # Encode the known faces
-known_face_encodings = []
-known_face_names = []
-for i in os.listdir("Known-Faces"):
-    known_face_names.append(i.split(".")[0])
-    known_image = face_recognition.load_image_file(os.path.join("Known-Faces" , i))
-    known_face_encoding = face_recognition.face_encodings(known_image)[0]
-    known_face_encodings.append(known_face_encoding)
+
 class Video(object):
-    def __init__(self):
+    def __init__(self,known_face_encoding,known_face_names,mp_face_detection):
         self.video = cv2.VideoCapture(0)
         self.start_time = time.time()
+        self.known_face_encodings=known_face_encoding
+        self.known_face_names = known_face_names
+        self.mp_face_detection  = mp_face_detection
     def __del__(self):
         self.video.release()
     
@@ -24,9 +19,12 @@ class Video(object):
 
         ret, frame = self.video.read()
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = mp_face_detection.process(frame_rgb)
-
+        results = self.mp_face_detection.process(frame_rgb)
+        # print("Read Camera")
+        faces_names = []
+        rects = []
         if results.detections:
+            # print("Enter results detection")
             for detection in results.detections:
                 x, y, w, h = int(detection.location_data.relative_bounding_box.xmin * frame.shape[1]), \
                              int(detection.location_data.relative_bounding_box.ymin * frame.shape[0]), \
@@ -35,21 +33,14 @@ class Video(object):
 
                 x1, y1 = x + w, y + h
                 try:
-                    frame = process_image((x, y, w, h), frame,known_face_encodings,known_face_names)
+                    frame,face_name = process_image((x, y, w, h), frame,self.known_face_encodings,self.known_face_names)
+                    faces_names.append(face_name)
                 except Exception as e:
-                    print(e)
-                # cv2.rectangle(frame, (x, y), (x1, y1), (0, 0, 255), 1)
-                cv2.line(frame, (x, y), (x + 30, y), (0, 0, 255), 6)  # Top Left
-                cv2.line(frame, (x, y), (x, y + 30), (0, 0, 255), 6)
-
-                cv2.line(frame, (x1, y), (x1 - 30, y), (0, 0, 255), 6)  # Top Right
-                cv2.line(frame, (x1, y), (x1, y + 30), (0, 0, 255), 6)
-
-                cv2.line(frame, (x, y1), (x + 30, y1), (0, 0, 255), 6)  # Bottom Left
-                cv2.line(frame, (x, y1), (x, y1 - 30), (0, 0, 255), 6)
-
-                cv2.line(frame, (x1, y1), (x1 - 30, y1), (0, 0, 255), 6)  # Bottom right
-                cv2.line(frame, (x1, y1), (x1, y1 - 30), (0, 0, 255), 6)
         
-        ret, jpg = cv2.imencode('.jpg', frame)
-        return jpg.tobytes()
+                    face_name = "Unknown"
+                    faces_names.append(face_name)
+                rects.append((x,y,x1,y1))
+                
+        
+        
+        return frame,faces_names,rects

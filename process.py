@@ -18,7 +18,7 @@ def recognize_faces(faces,image,known_face_encodings,known_face_names):
     face_image = rgb_image[y:y+h, x:x+w]
 
     # Resize the face image for better recognition performance (optional)
-    face_image = cv2.resize(face_image, (0, 0), fx=0.5, fy=0.5)
+    # face_image = cv2.resize(face_image, (0, 0), fx=0.5, fy=0.5)
 
     # Perform face recognition
     face_encodings = face_recognition.face_encodings(face_image)
@@ -47,4 +47,4 @@ def process_image(face,image,known_face_encodings,known_face_names):
     if face_names:
         cv2.putText(image, face_names, (max(2,face[0]), max(9,face[1] - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-    return image
+    return image,face_names
