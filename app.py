@@ -7,6 +7,7 @@ import mediapipe as mp
 import random
 import string
 import dlib
+from utils import save_customer_data
 app = Flask(__name__)
 mp_face_detection = mp.solutions.face_detection.FaceDetection()
 camera_enabled = False  # Variable to track camera state
@@ -86,6 +87,8 @@ def gen(camera):
                     else:
                         if i in unknown_faces:
                             unknown_faces.pop(i)
+                        if face_name:
+                            save_customer_data(face_name)
                     x,y,x1,y1 = rects[i]
                     
                     # cv2.rectangle(frame, (x, y), (x1, y1), (0, 0, 255), 1)

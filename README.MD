@@ -1,0 +1,6 @@
+-Install Python 3.8
+-make virtual Environment
+  -run python -m venv <enironment name>
+  -run activate environment "environmentpath/enironment name/Scripts/activate"
+  -run pip install -r requirements.txt
+-run python app.py
