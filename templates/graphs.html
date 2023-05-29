@@ -1,17 +1,4 @@
-
-{% block content %}
-<!doctype html>
-<html lang="en">
-
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Graphs</title>
-</head>
-<body>
-    <html lang="en">
-  <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,19 +7,111 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
     <title>Flask Apps</title>
-  </head>
-  <body>
+</head>
+<body>
+    
     <nav class="navbar navbar-light bg-dark">
         <div class="container">
-          <a class="navbar-brand" href="#" style="color: rgb(78, 144, 202);">
-            <img src="../static/download.jpg" alt="" width="30" height="24">
-        Store App for Customers Segregation 
-        </a>
-        <a class="btn btn-primary" href="/">Go back to Camera</a>
+            <a class="navbar-brand" href="#" style="color: rgb(78, 144, 202);">
+                <img src="../static/download.jpg" alt="" width="30" height="24">
+                Store App for Customers Segmentation 
+            </a>
+            <a class="btn btn-primary" href="/">Go to Camera</a>
         </div>
-      </nav>
-    <h1>Graphs</h1>
-    <img src="{{ url_for('static', filename='download.jpg') }}" alt="Image">
+    </nav>
+    <h1 style="text-align: center;">Customer Data Insights</h1>
+
+    <div id="chart"></div>
+    <div id="scatter-plot"></div>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+        // Read data from CSV file
+        Plotly.d3.csv("{{ url_for('static', filename='customer_data.csv') }}", function(err, data) {
+            if (err) throw err;
+
+            // Extract columns from the CSV data
+            var years = data.map(function(row) { return row.year; });
+            var dates = data.map(function(row) { return row.date; });
+            var times = data.map(function(row) { return row.time; });
+            var customerIds = data.map(function(row) { return row.Customer_id; });
+            var customerNames = data.map(function(row) { return row.Customer_name; });
+
+            // Generate insights
+            var insights = {
+                totalCustomers: customerIds.length,
+                uniqueCustomers: new Set(customerIds).size,
+                firstEntry: dates[0] + ' ' + times[0],
+                lastEntry: dates[dates.length - 1] + ' ' + times[times.length - 1]
+            };
+
+            // Display insights
+            var insightsHtml = '<center><h2>Data Insights</h2></center>' +
+                '<p style="text-align: center;">Total Customers: ' + insights.totalCustomers + '</p>' +
+                '<p style="text-align: center;">Unique Customers: ' + insights.uniqueCustomers + '</p>' +
+                '<p style="text-align: center;">First Entry: ' + insights.firstEntry + '</p>' +
+                '<p style="text-align: center;">Last Entry: ' + insights.lastEntry + '</p>';
+
+            document.getElementById("chart").innerHTML = insightsHtml;
+
+            // Prepare data for the bar chart
+            var customerCounts = {};
+            customerIds.forEach(function(customerId) {
+                if (customerId in customerCounts) {
+                    customerCounts[customerId]++;
+                } else {
+                    customerCounts[customerId] = 1;
+                }
+            });
+
+            var barChartData = [{
+                x: Object.keys(customerCounts),
+                y: Object.values(customerCounts),
+                type: 'bar',
+                marker: {
+                    color: Object.keys(customerCounts).map(function(key) {
+                        return 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.7)';
+                    })
+                }
+            }];
+
+            // Plot the bar chart
+            Plotly.newPlot('chart', barChartData, {
+                barmode: 'stack',  // Set barmode to 'stack' for larger bins
+                annotations: [{
+                    x: Object.keys(customerCounts),
+                    y: Object.values(customerCounts),
+                    text: Object.values(customerCounts),
+                    font: {
+                        size: 12,
+                        color: 'black'
+                    },
+                    showarrow: false,
+                    textposition: 'auto'
+                }],
+                margin: { t: 50, l: 50, r: 50, b: 80 } // Adjust the margins to increase bar height
+            });
+
+            // Prepare data for the scatter plot
+            var scatterPlotData = [{
+                x: dates,
+                y: times,
+                mode: 'markers',
+                text: customerNames, // Show customer names on hover
+                hovertemplate:
+                    '<b>Date:</b> %{x}<br>' +
+                    '<b>Time:</b> %{y}<br>' +
+                    '<b>Customer Name:</b> %{text}<extra></extra>', // Define the hover template
+                marker: {
+                    size: 6,
+                    color: customerNames.map(function(name) {
+                        return 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.7)';
+                    })
+                }
+            }];
+
+            // Plot the scatter plot
+            Plotly.newPlot('scatter-plot', scatterPlotData);
+        });
+    </script>
 </body>
-</html>
-{% endblock %}
