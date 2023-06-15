@@ -113,7 +113,7 @@
           
         }
         if (data.known_redirect){
-          window.location.href = "{{url_for('fourth_page')}}";
+          window.location.href = "{{url_for('fourth_page')}}?faceid=" + data.faceid;
            // Enable the Stop button
            document.getElementById("stop-btn").disabled = true;
             // Disable the Start button

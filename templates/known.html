@@ -1,32 +1,188 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Time Frame Scatter Plot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f1f1f1;
-            padding: 20px;
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    
+        <title>Flask Apps</title>
+
+
+  <title>Scatter Plot</title>
+  <style>
+  
+    body {
+        font-family: Arial, sans-serif;
+        
+       
+    }
+    .myclass{
+            padding-left: 100px;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #chartContainer {
-            height: 400px;
-            margin-bottom: 20px;
-        }
-    </style>
+    .container {
+        
+        
+        margin-top: 15px;    
+        
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .form-group input[type="submit"] {
+        background-color: #4CAF50;
+        color: #ffffff;
+        cursor: pointer;
+    }
+    .form-group input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    .container-fluid{
+        background-color: #f1f1f1;
+        padding: 0px;
+    }
+</style>
 </head>
+
 <body>
+    <div class = "container-fluid">
+
+        <nav class="navbar navbar-light bg-dark">
+            
+            
+            <div class="col-10">
+
+                <a class="navbar-brand myclass" href="#" style="color: rgb(78, 144, 202);">
+                    <img src="../static/download.jpg" alt="" width="30" height="24">
+                    Store App for Customers Segmentation 
+                </a>
+            </div>
+            <div class="col-2">
+
+                <a class="btn btn-primary " href="/">Go to Camera</a>
+            </div>
+     
+    
+        </nav>
+</div>
     <div class="container">
-        <h2>Time Frame Scatter Plot</h2>
-        <div id="chartContainer"></div>
+        <h1 id = "facename"></h1>
+        <div id="scatter-plot"></div>
+    </div>
+    
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script>
+     
+    const urlParams = new URLSearchParams(window.location.search);
+    const faceid = urlParams.get('faceid');
+    window.addEventListener('DOMContentLoaded', (event) => {
+     
+      const nameElement = document.getElementById('facename');
+      nameElement.textContent = "Data of "+faceid+" is shown below";
+    });
+    // Function to fetch the CSV file
+    Plotly.d3.csv("{{ url_for('static', filename='customer_data.csv') }}", function(err, data) {
+      if (err) throw err;
+
+      // Filter data based on the received faceid
+      const filteredData = data.filter(item => item.Customer_id === faceid);
+
+      if (filteredData.length === 0) {
+        // Display message if faceid is not found
+        document.getElementById('scatter-plot').innerHTML = 'Sorry, there is no data for the provided faceid.';
+        return;
+      }
+
+      // Extract columns from the filtered data
+      var dates = filteredData.map(function(row) { return row.date; });
+      var times = filteredData.map(function(row) { return row.time; });
+      var customerIds = filteredData.map(function(row) { return row.Customer_id; });
+      var customerNames = filteredData.map(function(row) { return row.name; });
+      var phones = filteredData.map(function(row) { return row.phone; });
+      var emails = filteredData.map(function(row) { return row.email; });
+      var addresses = filteredData.map(function(row) { return row.address; });
+      var mangoes = filteredData.map(function(row) { return row.mango; });
+      var oranges = filteredData.map(function(row) { return row.orange; });
+      var bananas = filteredData.map(function(row) { return row.banana; });
+    
+      // Prepare data for the scatter plot
+      var scatterPlotData = [];
+
+      // Create a color dictionary to store colors for each customer ID
+      var colorDict = {};
+
+      // Iterate over each data point
+      for (var i = 0; i < dates.length; i++) {
+        var customerId = customerIds[i];
+
+        // Check if the color for the customer ID is already defined
+        if (colorDict.hasOwnProperty(customerId)) {
+          // Use the existing color
+          var color = colorDict[customerId];
+        } else {
+          // Generate a new color for the customer ID
+          var color = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 1)';
+          colorDict[customerId] = color;
+        }
+
+        var trace = {
+          x: [dates[i]],
+          y: [times[i]],
+          mode: 'markers',
+          text: [
+                        '<b>Date:</b> ' + dates[i] + '<br>' +
+                        '<b>Time:</b> ' + times[i] + '<br>' +
+                        '<b>Customer ID:</b> ' + customerIds[i] + '<br>' +
+                        '<b>Customer Name:</b> ' + customerNames[i] + '<br>' +
+                        '<b>Address:</b> ' + addresses[i] + '<br>' +
+                        '<b>Phone:</b> ' + phones[i] + '<br>' +
+                        '<b>Email:</b> ' + emails[i] + '<br>' +
+                        '<b>Mango:</b> ' + mangoes[i] + '<br>' +
+                        '<b>Orange:</b> ' + oranges[i] + '<br>' +
+                        '<b>Banana:</b> ' + bananas[i] + '<br>'
+                    ],
+                    hovertemplate:
+                        '<b>Date:</b> %{x}<br>' +
+                        '<b>Time:</b> %{y}<br>' +
+                        '%{text}<extra></extra>', // Add <extra></extra> to show all data points
+          marker: {
+            size: 5,
+            color: color
+          },
+          type: 'scatter',
+          name: 'Customer ID: ' + customerIds[i] // Update the name to display the customer ID with a label
+        };
+
+        // Add the trace to the scatter plot data array
+        scatterPlotData.push(trace);
+      }
+
+      // Plot the scatter plot
+      Plotly.newPlot('scatter-plot', scatterPlotData, { hovermode: 'closest' });
+    });
+  </script>
+<!-- </body>
+<body> -->
+    <div class="container">
+        <h2 class = "py-3">Shopping Form For Existing Customer</h2>
         <form action="/submit2" method="post">
+        
             <div class="form-group">
                 <label for="shopping">Shopping:</label>
                 <div class="fruit-quantity">
@@ -62,6 +218,9 @@
                         <option value="10">10</option>
                     </select><br>
 
+                    <!-- Repeat the above pattern for other fruits -->
+                    <!-- For example: -->
+
                     <input type="hidden" name="fruits[]" value="banana">
                     <label for="banana">Banana:</label>
                     <select class="quantity" name="quantity_banana">
@@ -81,135 +240,16 @@
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-secondary" type="submit">Submit</button>
+                <button  class="btn btn-primary mt-4 center " type="submit" onclick="myFunction()" >Submit</button>
             </div>
         </form>
     </div>
+<script>
+    
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const data = [
-            {
-                year: 2023,
-                date: '2023-06-12',
-                time: '20:09',
-                customer_id: '19PX43',
-                name: 'ghazanfar',
-                address: 'kharader',
-                phone: '123',
-                email: 'abc@gmail.com',
-                mango: 8,
-                orange: 0,
-                banana: 0
-            },
-            {
-                year: 2023,
-                date: '2023-06-14',
-                time: '20:52',
-                customer_id: '5NLHDU',
-                name: 'ahmed',
-                address: 'kharader',
-                phone: '123',
-                email: 'khanzadaahmedraza@gmail.com',
-                mango: 2,
-                orange: 0,
-                banana: 4
-            },
-            {
-                year: 2023,
-                date: '2023-06-15',
-                time: '03:25',
-                customer_id: 'W9X27P',
-                name: 'ahmed',
-                address: 'kharader',
-                phone: '123',
-                email: 'abc@gmail.com',
-                mango: 3,
-                orange: 8,
-                banana: 10
-            },
-            {
-                year: 2023,
-                date: '2023-06-15',
-                time: '04:28',
-                customer_id: 'W9X27P',
-                name: 'ahmed',
-                address: 'kharader',
-                phone: '123',
-                email: 'abc@gmail.com',
-                mango: 10,
-                orange: 10,
-                banana: 0
-            }
-        ];
-
-        const ctx = document.getElementById('chartContainer').getContext('2d');
-        const scatterChart = new Chart(ctx, {
-            type: 'scatter',
-            data: {
-                datasets: [{
-                    label: 'Time Frame',
-                    data: data.map(item => ({ x: new Date(`${item.date} ${item.time}`).getTime(), y: item.customer_id })),
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                    pointRadius: 6,
-                    pointHoverRadius: 8,
-                    pointBackgroundColor: data.map(item => getRandomColor())
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'day',
-                            displayFormats: {
-                                day: 'YYYY-MM-DD'
-                            }
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Date'
-                        }
-                    },
-                    y: {
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Customer ID'
-                        }
-                    }
-                },
-                tooltips: {
-                    callbacks: {
-                        title: function (tooltipItem) {
-                            const index = tooltipItem[0].dataIndex;
-                            return `${data[index].date} ${data[index].time}`;
-                        },
-                        label: function (tooltipItem) {
-                            const index = tooltipItem.dataIndex;
-                            const customer = data[index];
-                            return `Customer ID: ${customer.customer_id}<br>
-                                    Name: ${customer.name}<br>
-                                    Address: ${customer.address}<br>
-                                    Phone: ${customer.phone}<br>
-                                    Email: ${customer.email}<br>
-                                    Mango: ${customer.mango}<br>
-                                    Orange: ${customer.orange}<br>
-                                    Banana: ${customer.banana}`;
-                        }
-                    }
-                }
-            }
-        });
-
-        // Helper function to generate random color
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-    </script>
+function myFunction() {
+    alert("Form Submitted Successfully");
+}
+</script>
 </body>
 </html>

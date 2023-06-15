@@ -5,26 +5,33 @@ import os
 import face_recognition
 import mediapipe as mp
 import random
-# import requests
 import string
 import dlib
 from utils import save_customer_data,putText,get_customer_data
 
 app = Flask(__name__)
 mp_face_detection = mp.solutions.face_detection.FaceDetection()
-camera_enabled = False  # Variable to track camera state
+camera_enabled = False  
 known_face_encodings = []
 known_face_names = []
-thresh_least = 6
+thresh_least = 12
+
 for name in os.listdir("Known-Faces"):
+    
     for i in os.listdir(os.path.join("Known-Faces",name)):
-        known_face_names.append(name)
-        known_image = face_recognition.load_image_file(os.path.join("Known-Faces",name , i))
-        known_face_encoding = face_recognition.face_encodings(known_image)[0]
-        known_face_encodings.append(known_face_encoding)
+        try:
+            known_image = face_recognition.load_image_file(os.path.join("Known-Faces",name , i))
+
+            known_face_encoding = face_recognition.face_encodings(known_image)[0]
+            known_face_encodings.append(known_face_encoding)
+            known_face_names.append(name)
+        except:
+            continue
+        
 video1 = Video(known_face_encodings,known_face_names,mp_face_detection)
 g1 = False
 g2 = False
+ready_to_save = False
 g_face_name = ""
 @app.route('/')
 def index():
@@ -35,16 +42,20 @@ def log():
     log_message = request.data.decode('utf-8')
     print(f"Log message from client: {log_message}")
 
-    global camera_enabled,g1,g_face_name,video1
+    global camera_enabled,g1,g2,g_face_name,video1,ready_to_save
     if log_message == "Camera enabled":
         camera_enabled = True
+        
         g_face_name = ""
         print("Camera enabled")
 
 
     elif log_message == "Camera disabled":
         camera_enabled = False
-        g1=False
+        
+        g1 = False
+        g2 = False
+        ready_to_save = False
         # del video1 #if del so sample image is also not shown on video frame
         print("Camera disabled")
 
@@ -55,16 +66,22 @@ def gen(camera):
     known_faces = {}
     frame_count = 0
     image_saved = False
+    
     while True:
         
         if camera_enabled:
             color = (0, 0, 255)
+            global g1,g2,ready_to_save
+         
             frame, faces_names, rects = camera.get_frame()
             try:
-                # Track unknown faces and count frames
+               
                 if len(faces_names)>1:
                     print(faces_names,"faces  names")
                 for i, face_name in enumerate(faces_names):
+                    if not face_name:
+                        continue
+                   
                     if face_name == "Unknown":
                         if i not in unknown_faces:
                             tracker = dlib.correlation_tracker()
@@ -87,35 +104,45 @@ def gen(camera):
                                 thresh_current_run = 4
                                 print("running after folder created")
                                 for j, saved_frame in enumerate(unknown_faces[i]['frames']):
+                                    print(f"len of frames of {i} : {len(unknown_faces[i]['frames'])}\n j: {j}")
                                     if k <thresh_current_run:
-                                        known_face_names.append(name_fol)
-                                    
-                                        known_face_encoding = face_recognition.face_encodings(saved_frame)[0]
-                                        known_face_encodings.append(known_face_encoding)
-                                        k +=1
+                                        try:
+                                            known_face_encoding = face_recognition.face_encodings(saved_frame)[0]
+                                            if len(known_face_encoding) > 0:
+
+                                                known_face_names.append(name_fol)
+                                                known_face_encodings.append(known_face_encoding)
+                                                k +=1
+                                            else:
+                                                unknown_faces[i]['count'] -= 1
+                                                unknown_faces[i]['frames'].pop(j)
+                                                continue
+                                        except:
+                                            unknown_faces[i]['count'] -= 1
+                                            unknown_faces[i]['frames'].pop(j)
+
+                                            continue
                                     
                                     print("image save start")
                                     cv2.imwrite(os.path.join(face_folder, f"{j}.jpg"), saved_frame)
                                     print("Iamge Saved")
+                                    if j>=thresh_least-1:
+                                        ready_to_save = True
                                     if j>=len(unknown_faces[i]['frames'])-1:
                                         print(j,"yes")
-                                        # yield jsonify({'image_saved': True})
-                                        global g1
-                                        g1 = True  # Set g1 to True when the condition is met
+                                        
+                                        g1 = True  
                                     if j>=len(unknown_faces[i]['frames'])-(int(len(unknown_faces[i]['frames'])//2)):
                                         frame = putText(frame,f"New Customer detected{name_fol}")
                                         color = (0, 255, 0)
-                                        
-
-                                # print(known_face_names, known_face_encodings)
-                                # faces_names[i] = name_fol
+                              
                                 unknown_faces.pop(i)
 
                     else:
-                        # if i in unknown_faces:
-                        #     unknown_faces.pop(i)
+                       
                         if face_name:
-                            # save_customer_data(face_name)
+                            print("face name condtion",face_name)
+                            
                             global g_face_name
                             g_face_name = face_name
                             color = (0, 255, 0)
@@ -124,30 +151,34 @@ def gen(camera):
                                 tracker1.start_track(frame, dlib.rectangle(*rects[i]))
                                 known_faces[i] = {'tracker': tracker1, 'frames': [frame[rects[i][1]:rects[i][3],rects[i][0]:rects[i][2]]], 'count': 1}
                             else:
+                                print(known_faces[i]['count'],ready_to_save)
+                                print("Update tracker of known face",rects)
                                 known_faces[i]['tracker'].update(frame)
                                 known_faces[i]['frames'].append(frame[rects[i][1]:rects[i][3],rects[i][0]:rects[i][2]])
                                 known_faces[i]['count'] += 1
                                 print(known_faces[i]['count'])
-                                if known_faces[i]['count'] >= thresh_least:
-                                    global g2
-                                    g2 = True  # Set g1 to True when the condition is met
+                                print("tracker updated")
+                                if (known_faces[i]['count'] >= thresh_least) or ready_to_save:
+                                    
+                                    g2 = True  
                                     print("known face count 10")
                                     known_faces.pop(i)
-                        # print("known faces",known_faces["count"])
+
+                        
                     x,y,x1,y1 = rects[i]
                 
                     
                     # cv2.rectangle(frame, (x, y), (x1, y1), (0, 0, 255), 1)
-                    cv2.line(frame, (x, y), (x + 30, y), color, 6)  # Top Left
+                    cv2.line(frame, (x, y), (x + 30, y), color, 6)  # TL
                     cv2.line(frame, (x, y), (x, y + 30), color, 6)
 
-                    cv2.line(frame, (x1, y), (x1 - 30, y), color, 6)  # Top Right
+                    cv2.line(frame, (x1, y), (x1 - 30, y), color, 6)  # TR
                     cv2.line(frame, (x1, y), (x1, y + 30), color, 6)
 
-                    cv2.line(frame, (x, y1), (x + 30, y1), color, 6)  # Bottom Left
+                    cv2.line(frame, (x, y1), (x + 30, y1), color, 6)  # BL
                     cv2.line(frame, (x, y1), (x, y1 - 30), color, 6)
 
-                    cv2.line(frame, (x1, y1), (x1 - 30, y1), color, 6)  # Bottom right
+                    cv2.line(frame, (x1, y1), (x1 - 30, y1), color, 6)  # BR
                     cv2.line(frame, (x1, y1), (x1, y1 - 30), color, 6)
 
                 frame_count += 1
@@ -171,8 +202,7 @@ def gen(camera):
         
 @app.route('/check_face_saved')
 def check_face_saved():
-    # Add your logic to check if the face is saved
-    # For example:
+   
     image_saved = False
     known_redirect = False
     print("inside function yes")
@@ -180,11 +210,12 @@ def check_face_saved():
         print("inside g1")
     
         image_saved = True
+        
 
-    if g2:
+    if g2 and  not g1:
         print("inside g2")
         known_redirect = True
-    return jsonify({'image_saved': image_saved,"known_redirect":known_redirect})
+    return jsonify({'image_saved': image_saved,"known_redirect":known_redirect,"faceid":g_face_name})
 
 
 @app.route('/submit', methods=['POST'])
@@ -201,8 +232,7 @@ def submit_form():
         quantity = request.form.get(f'quantity_{fruit}')
         quantities[fruit] = quantity
 
-    # Do something with the form data
-    # For example, you can print the values:
+
     global g_face_name
     print("Customer ID",g_face_name)
     print('Name:', name)
@@ -226,8 +256,6 @@ def submit_form2():
         quantity = request.form.get(f'quantity_{fruit}')
         quantities[fruit] = quantity
 
-    # Do something with the form data
-    # For example, you can print the values:
     print("Customer ID",g_face_name)
     print('Name:', person_name)
     print('Address:', person_address)

@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+
     <title>Registration Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f1f1f1;
-            padding: 20px;
+            background-color: #fdfdfd;
+          
         }
         .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+        
+        
+        margin-top: 15px;    
+        
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+        .container-fluid{
+       
+        padding: 0px ;
+    }
+     
         .form-group {
             margin-bottom: 20px;
         }
@@ -39,9 +52,32 @@
         .form-group input[type="submit"]:hover {
             background-color: #45a049;
         }
+        .myclass{
+            padding-left: 100px;
+        }
     </style>
 </head>
 <body>
+    <div class = "container-fluid">
+        
+        <nav class="navbar navbar-light bg-dark">
+            
+            
+                <div class="col-10">
+
+                    <a class="navbar-brand myclass" href="#" style="color: rgb(78, 144, 202);">
+                        <img src="../static/download.jpg" alt="" width="30" height="24">
+                        Store App for Customers Segmentation 
+                    </a>
+                </div>
+                <div class="col-2">
+
+                    <a class="btn btn-primary " href="/">Go to Camera</a>
+                </div>
+         
+        
+            </nav>
+    </div>
     <div class="container">
         <h2>Shopping Form For new Customer</h2>
         <form action="/submit" method="post">
@@ -62,6 +98,7 @@
                 <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
+                <hr>
                 <label for="shopping">Shopping:</label>
                 <div class="fruit-quantity">
                     <input type="hidden" name="fruits[]" value="mango">
@@ -118,7 +155,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <button  class="btn btn-secondary " type="submit" onclick="myFunction()" >Submit</button>
+                <button  class="btn btn-primary " type="submit" onclick="myFunction()" >Submit</button>
             </div>
         </form>
     </div>

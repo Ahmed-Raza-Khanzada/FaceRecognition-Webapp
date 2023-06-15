@@ -15,7 +15,7 @@ def save_customer_data(id,name,address,phone,email,quantities):
         data.append(v)
     last_entry_time, last_entry_id = get_last_entry(id)
     # print(current_datetime, id, last_entry_time, last_entry_id, "********")
-    if ((last_entry_time is None) or ((current_datetime - last_entry_time) >= timedelta(seconds=60)) or (id != last_entry_id)) and (id !=""):
+    if ((last_entry_time is None) or ((current_datetime - last_entry_time) >= timedelta(seconds=60)) or (id != last_entry_id)) and (id !="") and (name !="") :
        
         with open('static/customer_data.csv', 'a', newline='') as csvfile:
             writer = csv.writer(csvfile)
@@ -73,7 +73,7 @@ def get_customer_data(id):
         person_email = list(n["email"])[-1]
         person_phone = list(n["phone"])[-1]
         person_address = list(n["address"])[-1]
-        return row_date, row_time, person_name, person_email, int(person_phone), person_address
+        return row_date, row_time, person_name, person_email, person_phone, person_address
     else:
         return None, None, None, None, None, None
     

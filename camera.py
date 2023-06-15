@@ -35,11 +35,9 @@ class Video(object):
                 x1, y1 = x + w, y + h
                 try:
                     frame,face_name = process_image((x, y, w, h), frame,self.known_face_encodings,self.known_face_names)
-                    faces_names.append(face_name)
                 except Exception as e:
-        
-                    face_name = "Unknown"
-                    faces_names.append(face_name)
+                    face_name = False
+                faces_names.append(face_name)
                 rects.append((x,y,x1,y1))
                 
         
