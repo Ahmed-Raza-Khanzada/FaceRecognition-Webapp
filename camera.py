@@ -24,6 +24,7 @@ class Video(object):
         faces_names = []
         rects = []
         if results.detections:
+            
             # print("Enter results detection")
             for detection in results.detections:
                 x, y, w, h = int(detection.location_data.relative_bounding_box.xmin * frame.shape[1]), \

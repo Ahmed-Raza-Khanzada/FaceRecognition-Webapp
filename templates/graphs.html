@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html>
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -21,8 +23,8 @@
     </nav>
     <h1 style="text-align: center;">Customer Data Insights</h1>
 
-    <div id="chart"></div>
-    <div id="scatter-plot"></div>
+    <div id="chart" style="width: 80%; margin: auto;"></div>
+    <div id="scatter-plot" style="width: 80%; margin: auto;"></div>
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
@@ -36,6 +38,12 @@
             var times = data.map(function(row) { return row.time; });
             var customerIds = data.map(function(row) { return row.Customer_id; });
             var customerNames = data.map(function(row) { return row.Customer_name; });
+            var addresses = data.map(function(row) { return row.address; });
+            var phones = data.map(function(row) { return row.phone; });
+            var emails = data.map(function(row) { return row.email; });
+            var mangos = data.map(function(row) { return row.mango; });
+            var oranges = data.map(function(row) { return row.orange; });
+            var bananas = data.map(function(row) { return row.banana; });
 
             // Generate insights
             var insights = {
@@ -47,7 +55,7 @@
 
             // Display insights
             var insightsHtml = '<center><h2>Data Insights</h2></center>' +
-                '<p style="text-align: center;">Total Customers: ' + insights.totalCustomers + '</p>' +
+                '<p style="text-align: center;">Total Customers Entries: ' + insights.totalCustomers + '</p>' +
                 '<p style="text-align: center;">Unique Customers: ' + insights.uniqueCustomers + '</p>' +
                 '<p style="text-align: center;">First Entry: ' + insights.firstEntry + '</p>' +
                 '<p style="text-align: center;">Last Entry: ' + insights.lastEntry + '</p>';
@@ -72,7 +80,8 @@
                     color: Object.keys(customerCounts).map(function(key) {
                         return 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.7)';
                     })
-                }
+                },
+                width: 0.5 // Adjust the width of the bars
             }];
 
             // Plot the bar chart
@@ -83,35 +92,70 @@
                     y: Object.values(customerCounts),
                     text: Object.values(customerCounts),
                     font: {
-                        size: 12,
+                        size: 10,
                         color: 'black'
                     },
                     showarrow: false,
                     textposition: 'auto'
                 }],
-                margin: { t: 50, l: 50, r: 50, b: 80 } // Adjust the margins to increase bar height
+                margin: { t: 10, l: 10, r: 10, b: 50 } // Adjust the margins to reduce bar height and add margin at the bottom
             });
 
             // Prepare data for the scatter plot
-            var scatterPlotData = [{
-                x: dates,
-                y: times,
-                mode: 'markers',
-                text: customerNames, // Show customer names on hover
-                hovertemplate:
-                    '<b>Date:</b> %{x}<br>' +
-                    '<b>Time:</b> %{y}<br>' +
-                    '<b>Customer Name:</b> %{text}<extra></extra>', // Define the hover template
-                marker: {
-                    size: 6,
-                    color: customerNames.map(function(name) {
-                        return 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.7)';
-                    })
+            var scatterPlotData = [];
+
+            // Create a color dictionary to store colors for each customer ID
+            var colorDict = {};
+
+            // Iterate over each data point
+            for (var i = 0; i < dates.length; i++) {
+                var customerId = customerIds[i];
+
+                // Check if the color for the customer ID is already defined
+                if (colorDict.hasOwnProperty(customerId)) {
+                    // Use the existing color
+                    var color = colorDict[customerId];
+                } else {
+                    // Generate a new color for the customer ID
+                    var color = 'rgba(' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ',' + Math.floor(Math.random() * 256) + ', 0.7)';
+                    colorDict[customerId] = color;
                 }
-            }];
+
+                var trace = {
+                    x: [dates[i]],
+                    y: [times[i]],
+                    mode: 'markers',
+                    text: [
+                        '<b>Date:</b> ' + dates[i] + '<br>' +
+                        '<b>Time:</b> ' + times[i] + '<br>' +
+                        '<b>Customer ID:</b> ' + customerIds[i] + '<br>' +
+                        '<b>Customer Name:</b> ' + customerNames[i] + '<br>' +
+                        '<b>Address:</b> ' + addresses[i] + '<br>' +
+                        '<b>Phone:</b> ' + phones[i] + '<br>' +
+                        '<b>Email:</b> ' + emails[i] + '<br>' +
+                        '<b>Mango:</b> ' + mangos[i] + '<br>' +
+                        '<b>Orange:</b> ' + oranges[i] + '<br>' +
+                        '<b>Banana:</b> ' + bananas[i] + '<br>'
+                    ],
+                    hovertemplate:
+                        '<b>Date:</b> %{x}<br>' +
+                        '<b>Time:</b> %{y}<br>' +
+                        '%{text}<extra></extra>', // Add <extra></extra> to show all data points
+                    marker: {
+                        size: 5,
+                        color: color
+                    },
+                    type: 'scatter',
+                    name: 'Customer ID: ' + customerIds[i]  // Update the name to display the customer ID with a label
+                };
+
+                // Add the trace to the scatter plot data array
+                scatterPlotData.push(trace);
+            }
 
             // Plot the scatter plot
-            Plotly.newPlot('scatter-plot', scatterPlotData);
+            Plotly.newPlot('scatter-plot', scatterPlotData, { hovermode: 'closest' });
         });
     </script>
 </body>
+</html>

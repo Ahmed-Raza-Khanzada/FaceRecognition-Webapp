@@ -18,11 +18,12 @@ def recognize_faces(faces,image,known_face_encodings,known_face_names):
     face_image = rgb_image[y:y+h, x:x+w]
 
     # Resize the face image for better recognition performance (optional)
-    # face_image = cv2.resize(face_image, (0, 0), fx=0.5, fy=0.5)
+    face_image = cv2.resize(face_image, (300, 300), fx=0.5, fy=0.5)
 
     # Perform face recognition
     face_encodings = face_recognition.face_encodings(face_image)
     if len(face_encodings) > 0:
+    
         matches = face_recognition.compare_faces(known_face_encodings, face_encodings[0])
         name = "Unknown"
 
@@ -33,7 +34,7 @@ def recognize_faces(faces,image,known_face_encodings,known_face_names):
 
         # Return the face names
         return name
-    
+   
     return False
 # Process an image file
 def process_image(face,image,known_face_encodings,known_face_names):

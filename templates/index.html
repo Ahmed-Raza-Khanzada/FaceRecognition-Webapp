@@ -1,99 +1,141 @@
 {% extends 'base.html' %}
 {% block content %}
 <style>
-    .video-container {
-        position: relative;
-        
-        text-align: center;
-        margin: auto auto;
-    }
+  .video-container {
+    position: relative;
+    text-align: center;
+    margin: auto auto;
+  }
 
-    .video-frame {
-        border: 8px solid #f8f9fa;
-        box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.15);
-    }
+  .video-frame {
+    border: 8px solid #f8f9fa;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.15);
+  }
 
-    .btnme {
-      text-align: center;
-      
-    }
-    .btnstart{
-        padding-left:30px ;
-        padding-right:30px ;
-    }
-    .btnstop{
-        padding-left:20px ;
-        padding-right:20px ;
-    }
+  .btnme {
+    text-align: center;
+  }
+
+  .btnstart {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .btnstop {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 </style>
 <h1 style="text-align: center;">Customer Faces Identification</h1>
 <div class="video-container">
-    <img class="video-frame" src="{{ url_for('video') }}" height="500" width = "1000">
+  <img class="video-frame" src="{{ url_for('video') }}" height="500" width="1000">
 </div>
-<div method="POST" class = "btnme">
-    <button id="start-btn" class="btn btn-primary mt-4 center btnstart"  onclick="startFunction()">Start</button>
-    <button id="stop-btn" class="btn btn-secondary mt-4 center btnstop" onclick="stopFunction()" disabled>Stop</button>
+<div method="POST" class="btnme">
+  <button id="start-btn" class="btn btn-primary mt-4 center btnstart" onclick="startFunction()">Start</button>
+  <button id="stop-btn" class="btn btn-secondary mt-4 center btnstop" onclick="stopFunction()" disabled>Stop</button>
 </div>
 
 <script>
-    var isCameraEnabled = false; // Variable to track the camera state
+  var isCameraEnabled = false; // Variable to track the camera state
+  var isFaceDetected = false; // Variable to track face detection status
 
-    function startFunction() {
-        // Code to execute when Start button is clicked
-        console.log("Start button clicked");
-        // Send message to the server
-        sendLogToServer("Start button clicked");
+  function startFunction() {
+    // Code to execute when Start button is clicked
+    console.log("Start button clicked");
+    // Send message to the server
+    sendLogToServer("Start button clicked");
 
-        // Enable the camera
-        enableCamera();
+    // Enable the camera
+    enableCamera();
 
-        // Enable the Stop button
-        document.getElementById("stop-btn").disabled = false;
-        // Disable the Start button
-        document.getElementById("start-btn").disabled = true;
-    }
+    // Enable the Stop button
+    document.getElementById("stop-btn").disabled = false;
+    // Disable the Start button
+    document.getElementById("start-btn").disabled = true;
 
-    function stopFunction() {
-        // Code to execute when Stop button is clicked
-        console.log("Stop button clicked");
-        // Send message to the server
-        sendLogToServer("Stop button clicked");
+    // Check if face is detected periodically
+    setInterval(checkFaceSaved, 5000); // Adjust the interval as needed
+  }
 
-        // Disable the camera
-        disableCamera();
+  function stopFunction() {
+    // Code to execute when Stop button is clicked
+    console.log("Stop button clicked");
+    // Send message to the server
+    sendLogToServer("Stop button clicked");
 
-        // Disable the Stop button
-        document.getElementById("stop-btn").disabled = true;
-        // Enable the Start button
-        document.getElementById("start-btn").disabled = false;
-        
-    }
+    // Disable the camera
+    disableCamera();
 
-    function enableCamera() {
-        // Add your code to enable the camera here
-        // Example: startAction()
-        isCameraEnabled = true;
-        console.log("Camera enabled");
-        // Send message to the server
-        sendLogToServer("Camera enabled");
-    }
+    // Disable the Stop button
+    document.getElementById("stop-btn").disabled = true;
+    // Enable the Start button
+    document.getElementById("start-btn").disabled = false;
+  }
 
-    function disableCamera() {
-        // Add your code to disable the camera here
-        // Example: stopAction()
-        isCameraEnabled = false;
-        console.log("Camera disabled");
-        // Send message to the server
-        sendLogToServer("Camera disabled");
-    }
+  function enableCamera() {
+    // Add your code to enable the camera here
+    // Example: startAction()
+    isCameraEnabled = true;
+    console.log("Camera enabled");
+    // Send message to the server
+    sendLogToServer("Camera enabled");
+  }
 
-    function sendLogToServer(logMessage) {
-        // Send an XMLHttpRequest to the server with the log message
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/log", true);
-        xhr.setRequestHeader("Content-Type", "text/plain");
-        xhr.send(logMessage);
-    }
+  function disableCamera() {
+    // Add your code to disable the camera here
+    // Example: stopAction()
+    isCameraEnabled = false;
+    console.log("Camera disabled");
+    // Send message to the server
+    sendLogToServer("Camera disabled");
+  }
+
+  function checkFaceSaved() {
+    fetch('/check_face_saved')
+      .then(response => response.json())
+      .then(data => {
+        if (data.image_saved) {
+          // Face is saved
+          isCameraEnabled = false;
+          window.location.href = "{{url_for('third_page')}}";
+          // Enable the Stop button
+            document.getElementById("stop-btn").disabled = true;
+            // Disable the Start button
+            document.getElementById("start-btn").disabled = false;
+            sendLogToServer("Camera disabled");
+            disableCamera();
+
+
+        } else {
+          // Face is not saved
+          console.log('Face is not saved');
+
+          
+        }
+        if (data.known_redirect){
+          window.location.href = "{{url_for('fourth_page')}}";
+           // Enable the Stop button
+           document.getElementById("stop-btn").disabled = true;
+            // Disable the Start button
+            document.getElementById("start-btn").disabled = false;
+            sendLogToServer("Camera disabled");
+            disableCamera();
+        }
+        // Print the data from Python in the console
+        console.log('Data from Python:', data.data_from_python);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  function sendLogToServer(logMessage) {
+    // Send an XMLHttpRequest to the server with the log message
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/log", true);
+    xhr.setRequestHeader("Content-Type", "text/plain");
+    xhr.send(logMessage);
+  }
 </script>
 
 {% endblock %}

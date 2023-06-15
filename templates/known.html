@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Time Frame Scatter Plot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #chartContainer {
+            height: 400px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Time Frame Scatter Plot</h2>
+        <div id="chartContainer"></div>
+        <form action="/submit2" method="post">
+            <div class="form-group">
+                <label for="shopping">Shopping:</label>
+                <div class="fruit-quantity">
+                    <input type="hidden" name="fruits[]" value="mango">
+                    <label for="mango">Mango:</label>
+                    <select class="quantity" name="quantity_mango">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select><br>
+
+                    <input type="hidden" name="fruits[]" value="orange">
+                    <label for="orange">Orange:</label>
+                    <select class="quantity" name="quantity_orange">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select><br>
+
+                    <input type="hidden" name="fruits[]" value="banana">
+                    <label for="banana">Banana:</label>
+                    <select class="quantity" name="quantity_banana">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select><br>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-secondary" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const data = [
+            {
+                year: 2023,
+                date: '2023-06-12',
+                time: '20:09',
+                customer_id: '19PX43',
+                name: 'ghazanfar',
+                address: 'kharader',
+                phone: '123',
+                email: 'abc@gmail.com',
+                mango: 8,
+                orange: 0,
+                banana: 0
+            },
+            {
+                year: 2023,
+                date: '2023-06-14',
+                time: '20:52',
+                customer_id: '5NLHDU',
+                name: 'ahmed',
+                address: 'kharader',
+                phone: '123',
+                email: 'khanzadaahmedraza@gmail.com',
+                mango: 2,
+                orange: 0,
+                banana: 4
+            },
+            {
+                year: 2023,
+                date: '2023-06-15',
+                time: '03:25',
+                customer_id: 'W9X27P',
+                name: 'ahmed',
+                address: 'kharader',
+                phone: '123',
+                email: 'abc@gmail.com',
+                mango: 3,
+                orange: 8,
+                banana: 10
+            },
+            {
+                year: 2023,
+                date: '2023-06-15',
+                time: '04:28',
+                customer_id: 'W9X27P',
+                name: 'ahmed',
+                address: 'kharader',
+                phone: '123',
+                email: 'abc@gmail.com',
+                mango: 10,
+                orange: 10,
+                banana: 0
+            }
+        ];
+
+        const ctx = document.getElementById('chartContainer').getContext('2d');
+        const scatterChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Time Frame',
+                    data: data.map(item => ({ x: new Date(`${item.date} ${item.time}`).getTime(), y: item.customer_id })),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: data.map(item => getRandomColor())
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                            displayFormats: {
+                                day: 'YYYY-MM-DD'
+                            }
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    },
+                    y: {
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Customer ID'
+                        }
+                    }
+                },
+                tooltips: {
+                    callbacks: {
+                        title: function (tooltipItem) {
+                            const index = tooltipItem[0].dataIndex;
+                            return `${data[index].date} ${data[index].time}`;
+                        },
+                        label: function (tooltipItem) {
+                            const index = tooltipItem.dataIndex;
+                            const customer = data[index];
+                            return `Customer ID: ${customer.customer_id}<br>
+                                    Name: ${customer.name}<br>
+                                    Address: ${customer.address}<br>
+                                    Phone: ${customer.phone}<br>
+                                    Email: ${customer.email}<br>
+                                    Mango: ${customer.mango}<br>
+                                    Orange: ${customer.orange}<br>
+                                    Banana: ${customer.banana}`;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Helper function to generate random color
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+</body>
+</html>
