@@ -1,3 +1,4 @@
+# import libraries
 from flask import Flask, render_template, Response,jsonify, request,redirect, url_for
 from camera import Video
 import cv2
