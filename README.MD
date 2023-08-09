@@ -1,56 +1,15 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Your App's README</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      font-weight: bold;
-    }
-    h2 {
-      font-weight: bold;
-      color: #333;
-    }
-    h3 {
-      font-weight: bold;
-      color: #666;
-    }
-    p {
-      color: #666;
-    }
-    code {
-      background-color: #f4f4f4;
-      padding: 2px 4px;
-      border-radius: 4px;
-      font-family: Consolas, monospace;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .section {
-      margin-bottom: 40px;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 20px;
-    }
-  </style>
-</head>
+
 <body>
   <div class="container">
     <h1><strong>Customer Record and Analysis App</strong></h1>
     <div class="section">
       <h2><strong>Video Demo</strong></h2>
-        <div class="video-container">
-        <p>See the app in action:</p>
-        <video class="video-embed" controls>
-          <source src="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/raw/main/fr%20store-demo.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        </div>
+      <p>See the app in action by watching our video demo:</p>
+      <a href="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/raw/main/fr%20store-demo.mp4">
+        <img src="video-demo-thumbnail.png" alt="Watch the Video Demo" width="300" height="auto">
+      </a>
     </div>
     <div class="section">
       <h2><strong>How It Works</strong></h2>
