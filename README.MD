@@ -7,7 +7,7 @@
     <div class="section">
       <h2><strong>Video Demo</strong></h2>
       <p>See the app in action by watching our video demo:</p>
-      <a href="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/raw/main/fr%20store-demo.mp4">
+      <a href="https://www.youtube.com/watch?v=your-video-id">
         <img src="video-demo-thumbnail.png" alt="Watch the Video Demo" width="300" height="auto">
       </a>
     </div>
