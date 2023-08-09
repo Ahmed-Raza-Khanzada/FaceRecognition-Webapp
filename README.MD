@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Custogram: Customer Record and Analysis  README</title>
+  <title>Your App's README</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -37,18 +37,34 @@
       border-bottom: 1px solid #ddd;
       padding-bottom: 20px;
     }
+    /* Additional styling for the video section */
+    .video-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .video-embed {
+      width: 100%;
+      max-width: 800px;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1><strong>Customer Record and Analysis App</strong></h1>
+
     <div class="section">
       <h2><strong>Video Demo</strong></h2>
-      <p>See the app in action by watching our video demo:</p>
-      <a href="file:///C:/Users/ahmed/Videos/Bandicam/bandicam%202023-06-16%2016-10-03-458.mp4">
-        <img src="video-demo-thumbnail.png" alt="Watch the Video Demo" width="300" height="auto">
-      </a>
+      <div class="video-container">
+        <p>See the app in action:</p>
+        <video class="video-embed" controls>
+          <source src="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/raw/main/fr%20store-demo.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
     </div>
+
     <div class="section">
       <h2><strong>How It Works</strong></h2>
       <p>Welcome to the <strong>Customer Record and Analysis App</strong>! Our application simplifies customer management and provides valuable insights. Here's how it works:</p>
@@ -65,6 +81,7 @@
         </ul>
       </ul>
     </div>
+
     <div class="section">
       <h2><strong>Getting Started</strong></h2>
       <p>Experience the app's power with these steps:</p>
@@ -79,11 +96,13 @@
           <code>python app.py</code></li>
       </ol>
     </div>
+
     <div class="section">
       <h2><strong>Usage</strong></h2>
       <p>Embark on a journey of streamlined customer interaction. Seamlessly manage records, explore past purchases, and engage with captivating visualizations through our user-friendly interface. The dashboard empowers you with actionable insights that redefine your understanding of customer behavior.</p>
       <p><strong>Your success story begins here. Elevate your customer relationships today!</strong></p>
     </div>
+
   </div>
 </body>
 </html>
