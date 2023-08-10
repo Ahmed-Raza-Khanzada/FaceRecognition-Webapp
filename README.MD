@@ -45,7 +45,7 @@
     <div class="section">
       <h2><strong>Usage</strong></h2>
       <p>Embark on a journey of streamlined customer interaction. Seamlessly manage records, explore past purchases, and engage with captivating visualizations through our user-friendly interface. The dashboard empowers you with actionable insights that redefine your understanding of customer behavior.</p>
-      <p><strong>Your success story begins here. Elevate your customer relationships today!</strong></p>
+
     </div>
   </div>
 </body>
