@@ -7,7 +7,7 @@
       <h2><strong>Video Demo</strong></h2>
       <p>See the app in action by watching our video demo:</p>
       <video controls width="640" height="360">
-        <source src="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/raw/main/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315.mp4" type="video/mp4">
+       https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/raw/main/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315.mp4" type="video/mp4
       
       </video>
     </div>
