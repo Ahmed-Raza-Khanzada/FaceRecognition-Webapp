@@ -3,17 +3,17 @@
 
 <body>
   <div class="container">
-    <h1><strong>Customer Record and Analysis App</strong></h1>
+    <h1><strong>Customers Analysis using Face Recognition App</strong></h1>
     <div class="section">
       <h2><strong>Video Demo</strong></h2>
       <p>See the app in action by watching our video demo:</p>
       <a href="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315">
-        <img src="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315" alt="Watch the Video Demo" width="300" height="auto">
+        <img src="https://cdn-icons-png.flaticon.com/512/1461/1461141.png" alt="Watch the Video Demo" width="10" height="auto">
       </a>
     </div>
     <div class="section">
       <h2><strong>How It Works</strong></h2>
-      <p>Welcome to the <strong>Customer Record and Analysis App</strong>! Our application simplifies customer management and provides valuable insights. Here's how it works:</p>
+      <p>Welcome to the <strong>Face Recognition based customers recognition and Analysis </strong>! Our application simplifies customer management and provides valuable insights. Here's how it works:</p>
       <ul>
         <li><strong>Smart Customer Recognition:</strong> Seamlessly add new customer faces to the system. The app identifies new versus returning customers upon their store visit.</li>
         <li><strong>Effortless Data Collection:</strong> Guide new customers through a streamlined form to gather their information and real-time purchase details.</li>
