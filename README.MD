@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
-
 <body>
   <div class="container">
     <h1><strong>Customer Record and Analysis App</strong></h1>
     <div class="section">
       <h2><strong>Video Demo</strong></h2>
       <p>See the app in action by watching our video demo:</p>
-      <a href="fr store-demo.mp4">
-
-      </a>
+      <video controls width="640" height="360">
+        <source src="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/raw/main/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315.mp4" type="video/mp4">
+      
+      </video>
     </div>
     <div class="section">
       <h2><strong>How It Works</strong></h2>
       <p>Welcome to the <strong>Customer Record and Analysis App</strong>! Our application simplifies customer management and provides valuable insights. Here's how it works:</p>
-      <ul>
+       <ul>
         <li><strong>Smart Customer Recognition:</strong> Seamlessly add new customer faces to the system. The app identifies new versus returning customers upon their store visit.</li>
         <li><strong>Effortless Data Collection:</strong> Guide new customers through a streamlined form to gather their information and real-time purchase details.</li>
         <li><strong>Instant Access to Returning Patrons:</strong> Recognize returning customers swiftly. View their past visits and a comprehensive history of their previous purchases.</li>
@@ -30,7 +30,7 @@
     <div class="section">
       <h2><strong>Getting Started</strong></h2>
       <p>Experience the app's power with these steps:</p>
-      <ol>
+     <ol>
         <li><strong>Python 3.8 Installation:</strong> Ensure you have Python 3.8 installed on your system.</li>
         <li><strong>Create a Virtual Environment:</strong> Set up a virtual environment using:
           <code>python -m venv &lt;environment_name&gt;<br>
