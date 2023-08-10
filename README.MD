@@ -8,7 +8,7 @@
       <h2><strong>Video Demo</strong></h2>
       <p>See the app in action by watching our video demo:</p>
       <a href="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315">
-        <img src="https://cdn-icons-png.flaticon.com/512/1461/1461141.png" alt="Watch the Video Demo" width="300" height="auto">
+        <img src="https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315" alt="Watch the Video Demo" width="300" height="auto">
       </a>
     </div>
     <div class="section">
