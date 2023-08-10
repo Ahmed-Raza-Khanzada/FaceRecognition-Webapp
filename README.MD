@@ -8,7 +8,10 @@
       <h2><strong>Video Demo</strong></h2>
       <p>See the app in action by watching our video demo:</p>
       <a href="fr store-demo.mp4">
-        <img src="video-demo-thumbnail.png" alt="Watch the Video Demo" width="300" height="auto">
+       
+https://github.com/Ahmed-Raza-Khanzada/FaceRecognitionForStoreCustomersTracking-Webapp/assets/50530895/83686f2e-43e4-42c0-98a0-6fe819856315
+
+
       </a>
     </div>
     <div class="section">
